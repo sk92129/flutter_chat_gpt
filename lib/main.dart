@@ -20,7 +20,7 @@ class ChatScreen extends StatefulWidget {
 
 class _ChatScreenState extends State<ChatScreen> {
   final _controller = TextEditingController();
-  String _response = '';
+  dynamic _response = '';
 
   Future<void> _sendMessage() async {
     final prompt = _controller.text;

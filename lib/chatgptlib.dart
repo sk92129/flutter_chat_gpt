@@ -1,9 +1,10 @@
 import 'dart:convert';
+import 'package:flutterchatgpt/constants.dart';
 import 'package:http/http.dart' as http;
 
-Future<String> fetchChatGPTResponse(String prompt) async {
-  const apiKey = 'your_openai_api_key';
-  final url = Uri.parse('https://api.openai.com/v1/completions');
+Future<dynamic> fetchChatGPTResponse(String prompt) async {
+  const apiKey = APIKEY;
+  final url = Uri.parse('https://api.openai.com/v1/chat/completions');
 
   final response = await http.post(
     url,
@@ -13,7 +14,9 @@ Future<String> fetchChatGPTResponse(String prompt) async {
     },
     body: jsonEncode({
       'model': 'gpt-3.5-turbo',  // Or the model you're using
-      'prompt': prompt,
+       'messages': [
+        {'role': 'user', 'content': prompt}
+      ],
       'max_tokens': 100,
       'temperature': 0.7,
     }),
@@ -21,8 +24,9 @@ Future<String> fetchChatGPTResponse(String prompt) async {
 
   if (response.statusCode == 200) {
     final data = jsonDecode(response.body);
-    return data['choices'][0]['text'].toString();
+    print(data);
+    return data;
   } else {
-    throw Exception('Failed to fetch response');
+    throw Exception('Failed to fetch response ${response.statusCode} ${response.body}');
   }
 }
